@@ -918,6 +918,32 @@ class Client:
         data = await self.http.get_invite(invite_id)
         return Invite.from_incomplete(state=self._connection, data=data)
 
+    async def accept_invite(self, invite):
+        """|coro|
+
+        Accepts an :class:`Invite`, URL or ID to an invite.
+
+        The URL must be a discord.gg URL. e.g. "http://discord.gg/codehere".
+        An ID for the invite is just the "codehere" portion of the invite URL.
+
+        Parameters
+        -----------
+        invite
+            The :class:`Invite` or URL to an invite to accept.
+
+        Raises
+        -------
+        HTTPException
+            Accepting the invite failed.
+        NotFound
+            The invite is invalid or expired.
+        Forbidden
+            You are a bot user and cannot use this endpoint.
+        """
+
+        invite_id = self._resolve_invite(invite)
+        await self.http.accept_invite(invite_id)
+
     async def delete_invite(self, invite):
         """|coro|
 
